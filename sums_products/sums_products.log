@@ -1,7 +1,7 @@
 
 Database             Time                 Version
 -------------------- -------------------- ------------------------------
-Start: ORCL          19-JAN-2020 14:16:27 Version 19.3.0.0.0
+Start: ORCL          20-JAN-2020 06:45:47 Version 19.3.0.0.0
 
 Sums
 
@@ -462,5 +462,5 @@ DEPARTMENT_ID EMPLOYEE_ID     SALARY       MULT RUNNING_PROD TOTAL_PROD
 
 'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
 ----------------------------------
-End: 19-JAN-2020 14:16:27
+End: 20-JAN-2020 06:45:48
 
