@@ -1,0 +1,193 @@
+
+Database             Time                 Version
+-------------------- -------------------- ------------------------------
+Start: ORCL          09-FEB-2020 16:02:50 Version 19.3.0.0.0
+
+Running and Final Products: Final first rule, default SEQUENTIAL order
+
+DEPARTMENT_ID EMPLOYEE_ID     SALARY       MULT RUNNING_PROD FINAL_PROD
+------------- ----------- ---------- ---------- ------------ ----------
+           60         103       9000        1.9          1.9       1.42
+                      104       6000        1.6         3.04       1.42
+                      105       4800       1.48       4.4992       1.42
+                      106       4800       1.48     6.658816       1.42
+                      107       4200       1.42   9.45551872       1.42
+
+  1  WITH multipliers AS (
+  2  SELECT department_id, employee_id, salary, (1 + salary/10000) mult,
+  3         COUNT(*) OVER (PARTITION BY department_id) n_emps
+  4    FROM employees
+  5   WHERE department_id = 60
+  6  )
+  7  SELECT department_id, employee_id, salary, mult, running_prod, final_prod
+  8    FROM multipliers
+  9   MODEL
+ 10   	PARTITION BY (department_id)
+ 11   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id
+ 12   		                             ORDER BY employee_id) rn)
+ 13   	MEASURES (employee_id, salary, mult, mult running_prod, mult final_prod, n_emps)
+ 14   	RULES (
+ 15   		final_prod[any] = running_prod[n_emps[CV()]],
+ 16   		running_prod[rn > 1] = mult[CV()] * running_prod[CV() - 1]
+ 17   	)
+ 18*  ORDER BY department_id, employee_id
+
+Running and Final Products: Final first rule, AUTOMATIC order
+
+DEPARTMENT_ID EMPLOYEE_ID     SALARY       MULT RUNNING_PROD FINAL_PROD
+------------- ----------- ---------- ---------- ------------ ----------
+           60         103       9000        1.9          1.9 9.45551872
+                      104       6000        1.6         3.04 9.45551872
+                      105       4800       1.48       4.4992 9.45551872
+                      106       4800       1.48     6.658816 9.45551872
+                      107       4200       1.42   9.45551872 9.45551872
+
+  1  WITH multipliers AS (
+  2  SELECT department_id, employee_id, salary, (1 + salary/10000) mult,
+  3         COUNT(*) OVER (PARTITION BY department_id) n_emps
+  4    FROM employees
+  5   WHERE department_id = 60
+  6  )
+  7  SELECT department_id, employee_id, salary, mult, running_prod, final_prod
+  8    FROM multipliers
+  9   MODEL
+ 10   	PARTITION BY (department_id)
+ 11   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id
+ 12   		                             ORDER BY employee_id) rn)
+ 13   	MEASURES (employee_id, salary, mult, mult running_prod, mult final_prod, n_emps)
+ 14   	RULES AUTOMATIC ORDER (
+ 15   		final_prod[any] = running_prod[n_emps[CV()]],
+ 16   		running_prod[rn > 1] = mult[CV()] * running_prod[CV() - 1]
+ 17   	)
+ 18*  ORDER BY department_id, employee_id
+
+Average and Moving Average
+
+DEPARTMENT_ID EMPLOYEE_ID     SALARY AVG_SALARY MOVING_AVG_SALARY_3
+------------- ----------- ---------- ---------- -------------------
+           60         103       9000       5760                9000
+                      104       6000       5760                7500
+                      105       4800       5760                6600
+                      106       4800       5760                5200
+                      107       4200       5760                4600
+
+  1  SELECT department_id, employee_id, salary, avg_salary, moving_avg_salary_3
+  2    FROM employees
+  3   WHERE department_id = 60
+  4   MODEL
+  5   	PARTITION BY (department_id)
+  6   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id
+  7   		                             ORDER BY employee_id) rn)
+  8   	MEASURES (employee_id, salary, salary avg_salary, salary moving_avg_salary_3)
+  9   	RULES (
+ 10   		avg_salary[ANY] = AVG(salary)[ANY],
+ 11   		moving_avg_salary_3[ANY] = AVG(salary)[rn BETWEEN CV()-2 AND CV()]
+ 12   	)
+ 13*  ORDER BY department_id, employee_id
+
+UPSERT with FOR Loop: Split records into two with salary halved
+
+DEPARTMENT_ID EMPLOYEE_ID OLD_SALARY SPLIT_SALARY
+------------- ----------- ---------- ------------
+           60         103       9000         4500
+                      103                    4500
+                      104       6000         3000
+                      104                    3000
+                      105       4800         2400
+                      105                    2400
+                      106                    2400
+                      106       4800         2400
+                      107                    2100
+                      107       4200         2100
+
+10 rows selected.
+
+  1  SELECT department_id, employee_id, old_salary, split_salary
+  2    FROM employees
+  3   WHERE department_id = 60
+  4   MODEL
+  5   	PARTITION BY (department_id)
+  6   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id
+  7   		                             ORDER BY employee_id) rn)
+  8   	MEASURES (employee_id, salary old_salary, salary split_salary,
+  9   		      Count(*) OVER (PARTITION BY department_id) as n_emps)
+ 10   	RULES UPSERT (
+ 11   		employee_id[FOR rn FROM n_emps[1]+1 TO 2*n_emps[1] INCREMENT 1] =
+ 12   		   employee_id[CV() - n_emps[1]],
+ 13   		split_salary[FOR rn FROM n_emps[1]+1 TO 2*n_emps[1] INCREMENT 1] =
+ 14   		   old_salary[CV() - n_emps[1]],
+ 15   		split_salary[ANY] = 0.5 * split_salary[CV()]
+ 16   	)
+ 17*  ORDER BY department_id, employee_id
+
+ITERATE: Take square root of salary iteratively until average < 10
+
+DEPARTMENT_ID EMPLOYEE_ID     SALARY AVG_SALARY
+------------- ----------- ---------- ----------
+           60         103 9.74003746 8.64772508
+                      104 8.80111737 8.64772508
+                      105  8.3235829 8.64772508
+                      106  8.3235829 8.64772508
+                      107 8.05030478 8.64772508
+
+  1  SELECT department_id, employee_id, salary, avg_salary
+  2    FROM employees
+  3   WHERE department_id = 60
+  4   MODEL
+  5   	PARTITION BY (department_id)
+  6   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id ORDER BY employee_id) rn)
+  7   	MEASURES (employee_id, salary, salary avg_salary, salary moving_avg_salary_3)
+  8   	RULES ITERATE (100) UNTIL avg_salary[1] < 10.0 (
+  9          salary[ANY] = SQRT(salary[CV()]),
+ 10   		avg_salary[ANY] = AVG(salary)[ANY]
+ 11   	)
+ 12*  ORDER BY department_id, employee_id
+
+Within-Rule Order Default Ascending: Set salary = previous salary
+
+DEPARTMENT_ID EMPLOYEE_ID OLD_SALARY     SALARY
+------------- ----------- ---------- ----------
+           60         103       9000       9000
+                      104       6000       9000
+                      105       4800       9000
+                      106       4800       9000
+                      107       4200       9000
+
+  1  SELECT department_id, employee_id, old_salary, salary
+  2    FROM employees
+  3   WHERE department_id = 60
+  4   MODEL
+  5   	PARTITION BY (department_id)
+  6   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id ORDER BY employee_id) rn)
+  7   	MEASURES (employee_id, salary old_salary, salary)
+  8   	RULES (
+  9   		salary[rn > 1] = salary[CV()-1]
+ 10   	)
+ 11*  ORDER BY department_id, employee_id
+
+Within-Rule Order Descending: Set salary = previous salary
+
+DEPARTMENT_ID EMPLOYEE_ID OLD_SALARY     SALARY
+------------- ----------- ---------- ----------
+           60         103       9000       9000
+                      104       6000       9000
+                      105       4800       6000
+                      106       4800       4800
+                      107       4200       4800
+
+  1  SELECT department_id, employee_id, old_salary, salary
+  2    FROM employees
+  3   WHERE department_id = 60
+  4   MODEL
+  5   	PARTITION BY (department_id)
+  6   	DIMENSION BY (Row_Number() OVER (PARTITION BY department_id ORDER BY employee_id) rn)
+  7   	MEASURES (employee_id, salary old_salary, salary)
+  8   	RULES (
+  9   		salary[rn > 1] ORDER BY rn DESC = salary[CV()-1]
+ 10   	)
+ 11*  ORDER BY department_id, employee_id
+
+'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
+----------------------------------
+End: 09-FEB-2020 16:02:50
+

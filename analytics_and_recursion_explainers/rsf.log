@@ -1,0 +1,543 @@
+
+Database             Time                 Version
+-------------------- -------------------- ------------------------------
+Start: ORCL          12-FEB-2020 06:22:58 Version 19.3.0.0.0
+
+Employee Tree: Connect By
+
+EMPLOYEE_ID LAST_NAME            MANAGER_ID        LVL
+----------- -------------------- ---------- ----------
+        100 King                                     1
+        148 ...Cambrault                100          2
+        172 ......Bates                 148          3
+        169 ......Bloom                 148          3
+        170 ......Fox                   148          3
+        173 ......Kumar                 148          3
+        168 ......Ozer                  148          3
+        171 ......Smith                 148          3
+        102 ...De Haan                  100          2
+        103 ......Hunold                102          3
+        105 .........Austin             103          4
+        104 .........Ernst              103          4
+        107 .........Lorentz            103          4
+        106 .........Pataballa          103          4
+        147 ...Errazuriz                100          2
+        166 ......Ande                  147          3
+        167 ......Banda                 147          3
+        163 ......Greene                147          3
+        165 ......Lee                   147          3
+        164 ......Marvins               147          3
+        162 ......Vishney               147          3
+        121 ...Fripp                    100          2
+        130 ......Atkinson              121          3
+        129 ......Bissot                121          3
+        185 ......Bull                  121          3
+        187 ......Cabrio                121          3
+        186 ......Dellinger             121          3
+        131 ......Marlow                121          3
+        132 ......Olson                 121          3
+        184 ......Sarchand              121          3
+        201 ...Hartstein                100          2
+        202 ......Fay                   201          3
+        122 ...Kaufling                 100          2
+        188 ......Chung                 122          3
+        189 ......Dilly                 122          3
+        190 ......Gates                 122          3
+        135 ......Gee                   122          3
+        133 ......Mallin                122          3
+        191 ......Perkins               122          3
+        136 ......Philtanker            122          3
+        134 ......Rogers                122          3
+        101 ...Kochhar                  100          2
+        204 ......Baer                  101          3
+        108 ......Greenberg             101          3
+        110 .........Chen               108          4
+        109 .........Faviet             108          4
+        113 .........Popp               108          4
+        111 .........Sciarra            108          4
+        112 .........Urman              108          4
+        205 ......Higgins               101          3
+        206 .........Gietz              205          4
+        203 ......Mavris                101          3
+        200 ......Whalen                101          3
+        124 ...Mourgos                  100          2
+        142 ......Davies                124          3
+        197 ......Feeney                124          3
+        199 ......Grant                 124          3
+        143 ......Matos                 124          3
+        198 ......OConnell              124          3
+        141 ......Rajs                  124          3
+        144 ......Vargas                124          3
+        196 ......Walsh                 124          3
+        146 ...Partners                 100          2
+        160 ......Doran                 146          3
+        156 ......King                  146          3
+        158 ......McEwen                146          3
+        161 ......Sewall                146          3
+        159 ......Smith                 146          3
+        157 ......Sully                 146          3
+        114 ...Raphaely                 100          2
+        116 ......Baida                 114          3
+        119 ......Colmenares            114          3
+        118 ......Himuro                114          3
+        115 ......Khoo                  114          3
+        117 ......Tobias                114          3
+        145 ...Russell                  100          2
+        151 ......Bernstein             145          3
+        154 ......Cambrault             145          3
+        152 ......Hall                  145          3
+        153 ......Olsen                 145          3
+        150 ......Tucker                145          3
+        155 ......Tuvault               145          3
+        123 ...Vollman                  100          2
+        192 ......Bell                  123          3
+        193 ......Everett               123          3
+        195 ......Jones                 123          3
+        137 ......Ladwig                123          3
+        194 ......McCain                123          3
+        140 ......Patel                 123          3
+        139 ......Seo                   123          3
+        138 ......Stiles                123          3
+        120 ...Weiss                    100          2
+        181 ......Fleaur                120          3
+        183 ......Geoni                 120          3
+        127 ......Landry                120          3
+        128 ......Markle                120          3
+        126 ......Mikkilineni           120          3
+        125 ......Nayer                 120          3
+        182 ......Sullivan              120          3
+        180 ......Taylor                120          3
+        149 ...Zlotkey                  100          2
+        174 ......Abel                  149          3
+        178 ......Grant                 149          3
+        175 ......Hutton                149          3
+        179 ......Johnson               149          3
+        177 ......Livingston            149          3
+        176 ......Taylor                149          3
+
+107 rows selected.
+
+  1  WITH cby AS (
+  2      SELECT last_name, employee_id, manager_id, LEVEL lvl
+  3        FROM employees
+  4       START WITH employee_id = 100
+  5       CONNECT BY PRIOR employee_id = manager_id
+  6       ORDER SIBLINGS BY last_name
+  7  )
+  8  SELECT employee_id,
+  9         LPad('.', 3*(lvl - 1), '.') || last_name last_name,
+ 10         manager_id,
+ 11         lvl
+ 12*   FROM cby
+
+Employee Tree: Recursive subquery factors, depth first
+
+EMPLOYEE_ID LAST_NAME            MANAGER_ID        LVL
+----------- -------------------- ---------- ----------
+        100 King                                     1
+        148 ...Cambrault                100          2
+        172 ......Bates                 148          3
+        169 ......Bloom                 148          3
+        170 ......Fox                   148          3
+        173 ......Kumar                 148          3
+        168 ......Ozer                  148          3
+        171 ......Smith                 148          3
+        102 ...De Haan                  100          2
+        103 ......Hunold                102          3
+        105 .........Austin             103          4
+        104 .........Ernst              103          4
+        107 .........Lorentz            103          4
+        106 .........Pataballa          103          4
+        147 ...Errazuriz                100          2
+        166 ......Ande                  147          3
+        167 ......Banda                 147          3
+        163 ......Greene                147          3
+        165 ......Lee                   147          3
+        164 ......Marvins               147          3
+        162 ......Vishney               147          3
+        121 ...Fripp                    100          2
+        130 ......Atkinson              121          3
+        129 ......Bissot                121          3
+        185 ......Bull                  121          3
+        187 ......Cabrio                121          3
+        186 ......Dellinger             121          3
+        131 ......Marlow                121          3
+        132 ......Olson                 121          3
+        184 ......Sarchand              121          3
+        201 ...Hartstein                100          2
+        202 ......Fay                   201          3
+        122 ...Kaufling                 100          2
+        188 ......Chung                 122          3
+        189 ......Dilly                 122          3
+        190 ......Gates                 122          3
+        135 ......Gee                   122          3
+        133 ......Mallin                122          3
+        191 ......Perkins               122          3
+        136 ......Philtanker            122          3
+        134 ......Rogers                122          3
+        101 ...Kochhar                  100          2
+        204 ......Baer                  101          3
+        108 ......Greenberg             101          3
+        110 .........Chen               108          4
+        109 .........Faviet             108          4
+        113 .........Popp               108          4
+        111 .........Sciarra            108          4
+        112 .........Urman              108          4
+        205 ......Higgins               101          3
+        206 .........Gietz              205          4
+        203 ......Mavris                101          3
+        200 ......Whalen                101          3
+        124 ...Mourgos                  100          2
+        142 ......Davies                124          3
+        197 ......Feeney                124          3
+        199 ......Grant                 124          3
+        143 ......Matos                 124          3
+        198 ......OConnell              124          3
+        141 ......Rajs                  124          3
+        144 ......Vargas                124          3
+        196 ......Walsh                 124          3
+        146 ...Partners                 100          2
+        160 ......Doran                 146          3
+        156 ......King                  146          3
+        158 ......McEwen                146          3
+        161 ......Sewall                146          3
+        159 ......Smith                 146          3
+        157 ......Sully                 146          3
+        114 ...Raphaely                 100          2
+        116 ......Baida                 114          3
+        119 ......Colmenares            114          3
+        118 ......Himuro                114          3
+        115 ......Khoo                  114          3
+        117 ......Tobias                114          3
+        145 ...Russell                  100          2
+        151 ......Bernstein             145          3
+        154 ......Cambrault             145          3
+        152 ......Hall                  145          3
+        153 ......Olsen                 145          3
+        150 ......Tucker                145          3
+        155 ......Tuvault               145          3
+        123 ...Vollman                  100          2
+        192 ......Bell                  123          3
+        193 ......Everett               123          3
+        195 ......Jones                 123          3
+        137 ......Ladwig                123          3
+        194 ......McCain                123          3
+        140 ......Patel                 123          3
+        139 ......Seo                   123          3
+        138 ......Stiles                123          3
+        120 ...Weiss                    100          2
+        181 ......Fleaur                120          3
+        183 ......Geoni                 120          3
+        127 ......Landry                120          3
+        128 ......Markle                120          3
+        126 ......Mikkilineni           120          3
+        125 ......Nayer                 120          3
+        182 ......Sullivan              120          3
+        180 ......Taylor                120          3
+        149 ...Zlotkey                  100          2
+        174 ......Abel                  149          3
+        178 ......Grant                 149          3
+        175 ......Hutton                149          3
+        179 ......Johnson               149          3
+        177 ......Livingston            149          3
+        176 ......Taylor                149          3
+
+107 rows selected.
+
+  1  WITH rsf(employee_id, last_name, manager_id, lvl) AS (
+  2      SELECT employee_id,
+  3             last_name,
+  4             manager_id,
+  5             1 lvl
+  6        FROM employees
+  7       WHERE manager_id IS NULL
+  8      UNION ALL
+  9      SELECT e.employee_id,
+ 10             e.last_name,
+ 11             e.manager_id,
+ 12             r.lvl + 1
+ 13        FROM rsf r
+ 14        JOIN employees e ON e.manager_id = r.employee_id
+ 15  ) SEARCH DEPTH FIRST BY last_name SET ord_by
+ 16  SELECT employee_id,
+ 17         LPad('.', 3*(lvl - 1), '.') || last_name last_name,
+ 18         manager_id,
+ 19         lvl
+ 20    FROM rsf
+ 21*  ORDER BY ord_by
+
+Employee Tree: Recursive subquery factors, breadth first
+
+EMPLOYEE_ID LAST_NAME            MANAGER_ID        LVL
+----------- -------------------- ---------- ----------
+        100 King                                     1
+        148 ...Cambrault                100          2
+        102 ...De Haan                  100          2
+        147 ...Errazuriz                100          2
+        121 ...Fripp                    100          2
+        201 ...Hartstein                100          2
+        122 ...Kaufling                 100          2
+        101 ...Kochhar                  100          2
+        124 ...Mourgos                  100          2
+        146 ...Partners                 100          2
+        114 ...Raphaely                 100          2
+        145 ...Russell                  100          2
+        123 ...Vollman                  100          2
+        120 ...Weiss                    100          2
+        149 ...Zlotkey                  100          2
+        174 ......Abel                  149          3
+        166 ......Ande                  147          3
+        130 ......Atkinson              121          3
+        204 ......Baer                  101          3
+        116 ......Baida                 114          3
+        167 ......Banda                 147          3
+        172 ......Bates                 148          3
+        192 ......Bell                  123          3
+        151 ......Bernstein             145          3
+        129 ......Bissot                121          3
+        169 ......Bloom                 148          3
+        185 ......Bull                  121          3
+        187 ......Cabrio                121          3
+        154 ......Cambrault             145          3
+        188 ......Chung                 122          3
+        119 ......Colmenares            114          3
+        142 ......Davies                124          3
+        186 ......Dellinger             121          3
+        189 ......Dilly                 122          3
+        160 ......Doran                 146          3
+        193 ......Everett               123          3
+        202 ......Fay                   201          3
+        197 ......Feeney                124          3
+        181 ......Fleaur                120          3
+        170 ......Fox                   148          3
+        190 ......Gates                 122          3
+        135 ......Gee                   122          3
+        183 ......Geoni                 120          3
+        199 ......Grant                 124          3
+        178 ......Grant                 149          3
+        108 ......Greenberg             101          3
+        163 ......Greene                147          3
+        152 ......Hall                  145          3
+        205 ......Higgins               101          3
+        118 ......Himuro                114          3
+        103 ......Hunold                102          3
+        175 ......Hutton                149          3
+        179 ......Johnson               149          3
+        195 ......Jones                 123          3
+        115 ......Khoo                  114          3
+        156 ......King                  146          3
+        173 ......Kumar                 148          3
+        137 ......Ladwig                123          3
+        127 ......Landry                120          3
+        165 ......Lee                   147          3
+        177 ......Livingston            149          3
+        133 ......Mallin                122          3
+        128 ......Markle                120          3
+        131 ......Marlow                121          3
+        164 ......Marvins               147          3
+        143 ......Matos                 124          3
+        203 ......Mavris                101          3
+        194 ......McCain                123          3
+        158 ......McEwen                146          3
+        126 ......Mikkilineni           120          3
+        125 ......Nayer                 120          3
+        198 ......OConnell              124          3
+        153 ......Olsen                 145          3
+        132 ......Olson                 121          3
+        168 ......Ozer                  148          3
+        140 ......Patel                 123          3
+        191 ......Perkins               122          3
+        136 ......Philtanker            122          3
+        141 ......Rajs                  124          3
+        134 ......Rogers                122          3
+        184 ......Sarchand              121          3
+        139 ......Seo                   123          3
+        161 ......Sewall                146          3
+        171 ......Smith                 148          3
+        159 ......Smith                 146          3
+        138 ......Stiles                123          3
+        182 ......Sullivan              120          3
+        157 ......Sully                 146          3
+        180 ......Taylor                120          3
+        176 ......Taylor                149          3
+        117 ......Tobias                114          3
+        150 ......Tucker                145          3
+        155 ......Tuvault               145          3
+        144 ......Vargas                124          3
+        162 ......Vishney               147          3
+        196 ......Walsh                 124          3
+        200 ......Whalen                101          3
+        105 .........Austin             103          4
+        110 .........Chen               108          4
+        104 .........Ernst              103          4
+        109 .........Faviet             108          4
+        206 .........Gietz              205          4
+        107 .........Lorentz            103          4
+        106 .........Pataballa          103          4
+        113 .........Popp               108          4
+        111 .........Sciarra            108          4
+        112 .........Urman              108          4
+
+107 rows selected.
+
+  1  WITH rsf(employee_id, last_name, manager_id, lvl) AS (
+  2      SELECT employee_id,
+  3             last_name,
+  4             manager_id,
+  5             1 lvl
+  6        FROM employees
+  7       WHERE manager_id IS NULL
+  8      UNION ALL
+  9      SELECT e.employee_id,
+ 10             e.last_name,
+ 11             e.manager_id,
+ 12             r.lvl + 1
+ 13        FROM rsf r
+ 14        JOIN employees e ON e.manager_id = r.employee_id
+ 15  ) SEARCH BREADTH FIRST BY last_name SET ord_by
+ 16  SELECT employee_id,
+ 17         LPad('.', 3*(lvl - 1), '.') || last_name last_name,
+ 18         manager_id,
+ 19         lvl
+ 20    FROM rsf
+ 21*  ORDER BY ord_by
+
+Products using Recursive Subquery Factors: Passing through expressions
+
+DEPARTMENT_ID EMPLOYEE_ID     SALARY       MULT RUNNING_PROD        LVL
+------------- ----------- ---------- ---------- ------------ ----------
+           10         200       4400       1.44         1.44          1
+           20         201      13000        2.3          2.3          1
+                      202       6000        1.6         3.68          2
+           30         114      11000        2.1          2.1          1
+                      115       3100       1.31        2.751          2
+                      116       2900       1.29      3.54879          3
+                      117       2800       1.28    4.5424512          4
+                      118       2600       1.26   5.72348851          5
+                      119       2500       1.25   7.15436064          6
+           40         203       6500       1.65         1.65          1
+           50         120       8000        1.8          1.8          1
+                      121       8200       1.82        3.276          2
+                      122       7900       1.79      5.86404          3
+                      123       6500       1.65     9.675666          4
+                      124       5800       1.58   15.2875523          5
+                      125       3200       1.32    20.179569          6
+                      126       2700       1.27   25.6280526          7
+                      127       2400       1.24   31.7787853          8
+                      128       2200       1.22    38.770118          9
+                      129       3300       1.33    51.564257         10
+                      130       2800       1.28   66.0022489         11
+                      131       2500       1.25   82.5028112         12
+                      132       2100       1.21   99.8284015         13
+                      133       3300       1.33   132.771774         14
+                      134       2900       1.29   171.275589         15
+                      135       2400       1.24    212.38173         16
+                      136       2200       1.22    259.10571         17
+                      137       3600       1.36   352.383766         18
+                      138       3200       1.32   465.146571         19
+                      139       2700       1.27   590.736145         20
+                      140       2500       1.25   738.420182         21
+                      141       3500       1.35   996.867245         22
+                      142       3100       1.31   1305.89609         23
+                      143       2600       1.26   1645.42907         24
+                      144       2500       1.25   2056.78634         25
+                      180       3200       1.32   2714.95797         26
+                      181       3100       1.31   3556.59495         27
+                      182       2500       1.25   4445.74368         28
+                      183       2800       1.28   5690.55191         29
+                      184       4200       1.42   8080.58372         30
+                      185       4100       1.41    11393.623         31
+                      186       3400       1.34   15267.4549         32
+                      187       3000        1.3   19847.6913         33
+                      188       3800       1.38    27389.814         34
+                      189       3600       1.36   37250.1471         35
+                      190       2900       1.29   48052.6898         36
+                      191       2500       1.25   60065.8622         37
+                      192       4000        1.4   84092.2071         38
+                      193       3900       1.39   116888.168         39
+                      194       3200       1.32   154292.382         40
+                      195       2800       1.28   197494.248         41
+                      196       3100       1.31   258717.465         42
+                      197       3000        1.3   336332.705         43
+                      198       2600       1.26   423779.208         44
+                      199       2600       1.26   533961.802         45
+           60         103       9000        1.9          1.9          1
+                      104       6000        1.6         3.04          2
+                      105       4800       1.48       4.4992          3
+                      106       4800       1.48     6.658816          4
+                      107       4200       1.42   9.45551872          5
+           70         204      10000          2            2          1
+           80         145      14000        2.4          2.4          1
+                      146      13500       2.35         5.64          2
+                      147      12000        2.2       12.408          3
+                      148      11000        2.1      26.0568          4
+                      149      10500       2.05     53.41644          5
+                      150      10000          2    106.83288          6
+                      151       9500       1.95   208.324116          7
+                      152       9000        1.9    395.81582          8
+                      153       8000        1.8   712.468477          9
+                      154       7500       1.75   1246.81983         10
+                      155       7000        1.7   2119.59372         11
+                      156      10000          2   4239.18744         12
+                      157       9500       1.95    8266.4155         13
+                      158       9000        1.9   15706.1895         14
+                      159       8000        1.8    28271.141         15
+                      160       7500       1.75   49474.4968         16
+                      161       7000        1.7   84106.6445         17
+                      162      10500       2.05   172418.621         18
+                      163       9500       1.95   336216.311         19
+                      164       7200       1.72   578292.056         20
+                      165       6800       1.68   971530.654         21
+                      166       6400       1.64   1593310.27         22
+                      167       6200       1.62   2581162.64         23
+                      168      11500       2.15   5549499.68         24
+                      169      10000          2   11098999.4         25
+                      170       9600       1.96   21754038.7         26
+                      171       7400       1.74   37852027.4         27
+                      172       7300       1.73   65484007.4         28
+                      173       6100       1.61    105429252         29
+                      174      11000        2.1    221401429         30
+                      175       8800       1.88    416234687         31
+                      176       8600       1.86    774196517         32
+                      177       8400       1.84   1424521591         33
+                      179       6200       1.62   2307724978         34
+           90         100      24000        3.4          3.4          1
+                      101      17000        2.7         9.18          2
+                      102      17000        2.7       24.786          3
+          100         108      12008     2.2008       2.2008          1
+                      109       9000        1.9      4.18152          2
+                      110       8200       1.82    7.6103664          3
+                      111       7700       1.77   13.4703485          4
+                      112       7800       1.78   23.9772204          5
+                      113       6900       1.69   40.5215024          6
+          110         205      12008     2.2008       2.2008          1
+                      206       8300       1.83     4.027464          2
+                      178       7000        1.7          1.7          1
+
+107 rows selected.
+
+  1  WITH multipliers AS (
+  2  SELECT department_id, employee_id, salary, (1 + salary/10000) mult,
+  3         Row_Number() OVER (PARTITION BY department_id ORDER BY employee_id) rn
+  4    FROM employees
+  5  ), rsf (department_id, employee_id, rn, salary, mult, running_prod, lvl) AS (
+  6      SELECT department_id, employee_id, rn, salary, mult,
+  7            mult running_prod, 1 lvl
+  8        FROM multipliers
+  9       WHERE rn = 1
+ 10      UNION ALL
+ 11      SELECT m.department_id, m.employee_id, m.rn, m.salary, m.mult,
+ 12             r.running_prod * m.mult, r.lvl + 1
+ 13        FROM rsf r
+ 14        JOIN multipliers m
+ 15          ON m.rn = r.rn + 1
+ 16         AND m.department_id = r.department_id
+ 17  )
+ 18  SELECT department_id, employee_id, salary, mult, running_prod, lvl
+ 19    FROM rsf
+ 20*  ORDER BY department_id, employee_id
+
+'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
+----------------------------------
+End: 12-FEB-2020 06:22:59
+
