@@ -8,11 +8,11 @@ Recording                     | SQL Script        | Tweet
 ------------------------------|-------------------|------
 Running Sums and Products.mp4 | sums_products.sql | [Tweet](https://twitter.com/BrenPatF/status/1219149845505683459)
 
-## Installation
+## Running the Scripts
 You must have the Oracle hr demo schema installed on an Oracle database of at least v11.2 (see [README: Oracle SQL Projects](../README.md)).
 ### [Schema: hr; Folder: sums_products]
 
-- Run script from slqplus:
+- Run script from sqlplus:
 ```
 SQL> @sums_products
 ```

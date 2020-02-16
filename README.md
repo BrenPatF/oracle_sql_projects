@@ -16,14 +16,15 @@ The analytics_and_recursion_explainers subproject has the scripts and artefacts 
 - [README: analytics_and_recursion_explainers](analytics_and_recursion_explainers/README.md)
 
 ## Installation
-### Install 1: Install pre-requisite tools
+The project code consists of SQL query scripts that can be run from sqlplus as long as the pre-requisites are in place.
+### Install pre-requisite tools (if necessary)
 #### Oracle database with HR demo schema
 The database installation requires a minimum Oracle version of 11.2, with Oracle's HR demo schema installed [Oracle Database Software Downloads](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html).
 
 If HR demo schema is not installed, it can be got from here: [Oracle Database Sample Schemas](https://docs.oracle.com/cd/E11882_01/server.112/e10831/installation.htm#COMSC001).
 
-### Install 2: Run scripts
-See the subproject README:
+### Running the Scripts
+See the subproject READMEs:
 - [README: sums_products](sums_products/README.md)
 - [README: analytics_and_recursion_explainers](analytics_and_recursion_explainers/README.md)
 

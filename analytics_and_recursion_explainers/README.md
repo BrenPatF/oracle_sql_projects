@@ -27,7 +27,8 @@ Model.mp4     | model.sql     | [SQL Model Clause in a Tweet](https://twitter.co
 
 Recording     | SQL Script    | Tweet
 --------------|---------------|------------------------------------------
-RSF.mp4       | rsf.sql       | [SQL Recursive Subquery Factors in a Tweet]
+RSF.mp4       | rsf.sql       | [SQL Recursive Subquery Factors in a Tweet](https://twitter.com/BrenPatF/status/1228958230304436225)
+
 
 [Oracle Doc: Recursive Subquery Factoring](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/SELECT.html#GUID-CFA006CA-6FF1-4972-821E-6996142A51C6__I2077142)
 
@@ -37,11 +38,11 @@ Here's a query structure diagram for the final recursive query:
 and a diagram showing partitioning and flow through the iterations for same:
 <img src="RSF-Recursion.png">
 
-## Installation
+## Running the Scripts
 You must have the Oracle hr demo schema installed on an Oracle database of at least v11.2 (see [README: Oracle SQL Projects](../README.md)).
 ### [Schema: hr; Folder: analytics_and_recursion_explainers]
 
-- Run scripts from slqplus:
+- Run scripts from sqlplus:
 ```
 SQL> @analytics
 SQL> @model
