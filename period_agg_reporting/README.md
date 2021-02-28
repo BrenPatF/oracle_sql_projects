@@ -6,7 +6,7 @@ The period_agg_reporting subproject has the scripts and artefacts for a blog pos
 
 Recording                      | SQL Script                    | Tweet
 -------------------------------|-------------------------------|------
-Period Aggregate Reporting.mp4 | period_agg_report_queries.sql | [Tweet](https://twitter.com/BrenPatF/status/)
+Period Aggregate Reporting.mp4 | period_agg_report_queries.sql | [Tweet](https://twitter.com/BrenPatF/status/1366062116264955912)
 
 ## Running the Scripts
 This subproject creates its own test data on an Oracle database of at least v11.2, in any schema where the appropriate privileges are available. The execution plans are generated using wrapper functions from the GitHub project [Oracle PL/SQL general utilities module](https://github.com/BrenPatF/oracle_plsql_utils), but you can run the scripts and ignore the execution plan failures if this is not installed.
