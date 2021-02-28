@@ -1,0 +1,49 @@
+
+Database             Time                 Version
+-------------------- -------------------- ------------------------------
+Start: ORCL          28-FEB-2021 14:16:16 Version 19.3.0.0.0
+
+Create sales_history
+
+Table dropped.
+
+
+Table created.
+
+  1  CREATE TABLE sales_history (
+  2          prod_code               VARCHAR2(30) NOT NULL,
+  3          month_dt                DATE NOT NULL,
+  4          sales_value             NUMBER(10,0),
+  5          sales_cost              NUMBER(10,0),
+  6          CONSTRAINT slh_pk       PRIMARY KEY (prod_code, month_dt)
+  7* )
+3 years random values for PROD_ONE
+
+36 rows created.
+
+  1  INSERT INTO sales_history
+  2  WITH month_gen AS (
+  3  	SELECT LEVEL rn, Add_Months(Trunc(SYSDATE, 'MONTH'), LEVEL - 36) dt
+  4  	  FROM DUAL
+  5  	CONNECT BY LEVEL < 37
+  6  )
+  7  SELECT 'PROD_ONE',
+  8  	   dt,
+  9  	  DBMS_Random.Value (low => 1000, high => 10000),
+ 10  	  DBMS_Random.Value (low => 100, high => 1000)
+ 11*   FROM month_gen
+3 years random values for PROD_TWO
+
+36 rows created.
+
+
+PL/SQL procedure successfully completed.
+
+
+Commit complete.
+
+
+'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
+----------------------------------
+End: 28-FEB-2021 14:16:16
+

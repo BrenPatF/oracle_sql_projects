@@ -18,11 +18,18 @@ The analytics_and_recursion_explainers subproject has the scripts and artefacts 
 - [Twitter Thread](https://twitter.com/BrenPatF/status/1228610471391113216)
 - [README: analytics_and_recursion_explainers](analytics_and_recursion_explainers/README.md)
 
+## period_agg_reporting
+The period_agg_reporting subproject has the scripts and artefacts for a Twitter thread in which I explain three SQL queries for doing rolling aggregates over multiple time periods, in a single tweet recording (< 2m20s) each.
+
+- [Blog: SQL for Period Aggregate Reporting](http://aprogrammerwrites.eu/?p=3006)
+- [Twitter Thread](https://twitter.com/BrenPatF/status/)
+- [README: period_agg_reporting](period_agg_reporting/README.md)
+
 ## Installation
 The project code consists of SQL query scripts that can be run from sqlplus as long as the pre-requisites are in place.
 ### Install pre-requisite tools (if necessary)
 #### Oracle database with HR demo schema
-The database installation requires a minimum Oracle version of 11.2, with Oracle's HR demo schema installed [Oracle Database Software Downloads](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html).
+The database installation requires a minimum Oracle version of 11.2, with Oracle's HR demo schema installed (first two subprojects only) [Oracle Database Software Downloads](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html).
 
 If HR demo schema is not installed, it can be got from here: [Oracle Database Sample Schemas](https://docs.oracle.com/cd/E11882_01/server.112/e10831/installation.htm#COMSC001).
 
@@ -30,6 +37,7 @@ If HR demo schema is not installed, it can be got from here: [Oracle Database Sa
 See the subproject READMEs:
 - [README: sums_products](sums_products/README.md)
 - [README: analytics_and_recursion_explainers](analytics_and_recursion_explainers/README.md)
+- [README: period_agg_reporting](period_agg_reporting/README.md)
 
 ## Operating System/Oracle Versions
 ### Windows
