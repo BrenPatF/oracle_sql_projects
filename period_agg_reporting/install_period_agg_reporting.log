@@ -1,8 +1,10 @@
 
 Database             Time                 Version
 -------------------- -------------------- ------------------------------
-Start: ORCL          06-NOV-2021 07:58:04 Version 21.3.0.0.0
+Start: ORCL          09-NOV-2021 07:47:17 Version 21.3.0.0.0
 
+Table creation and population
+=============================
 Create sales_history
 DROP TABLE sales_history
            *
@@ -45,8 +47,19 @@ PL/SQL procedure successfully completed.
 
 Commit complete.
 
+Packages creation
+=================
+Create package Period_Agg_Dynamic
+
+Package created.
+
+No errors.
+
+Package body created.
+
+No errors.
 
 'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
 ----------------------------------
-End: 06-NOV-2021 07:58:04
+End: 09-NOV-2021 07:47:18
 
