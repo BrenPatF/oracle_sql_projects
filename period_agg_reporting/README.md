@@ -2,7 +2,7 @@
 This project has the code and other artefacts for small SQL projects, including mp4 recordings that explain the project.
 
 ## period_agg_report_queries
-The period_agg_reporting subproject has the scripts and artefacts for a blog post, [SQL for Period Aggregate Reporting](https://brenpatf.github.io/jekyll/update/2021/11/14/2021-11-14-sql-for-period-aggregate-reporting.html). I also explain the post in two tweet recordings (< 2m20s each).
+The period_agg_reporting subproject has the scripts and artefacts for a blog post, [SQL for Period Aggregate Reporting](https://brenpatf.github.io/2021/11/14/2021-11-14-sql-for-period-aggregate-reporting.html). I also explain the post in two tweet recordings (< 2m20s each).
 
 Recording                      | SQL Script                    | Tweet
 -------------------------------|-------------------------------|------

@@ -58,7 +58,7 @@ We go on to provide two dynamic SQL queries for the required report, using PL/SQ
 
 These allow for parametrization of the period list and (SQL macro only) the measures list.
 
-- [Blog: SQL for Period Aggregate Reporting](https://brenpatf.github.io/jekyll/update/2021/11/14/2021-11-14-sql-for-period-aggregate-reporting.html)
+- [Blog: SQL for Period Aggregate Reporting](https://brenpatf.github.io/2021/11/14/2021-11-14-sql-for-period-aggregate-reporting.html)
 - [Twitter Thread](https://twitter.com/BrenPatF/status/)
 - [README: period_agg_reporting](period_agg_reporting/README.md)
 
